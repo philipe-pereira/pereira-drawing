@@ -6,12 +6,16 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import br.com.pereiraeng.io.IOutils;
+import br.com.pereiraeng.math.swing.chart.Chart;
+import br.com.pereiraeng.math.swing.chart.CurveFamily;
+import br.com.pereiraeng.math.swing.chart.Plotable;
 import br.com.pereiraeng.physics.swing.RealDimensionInput;
 import br.com.pereiraeng.swing.HTMLselection;
 import br.com.pereiraeng.swing.input.cod.MarkupInput;
@@ -70,6 +74,62 @@ public class GraphicsExporter {
 
 			File file = (File) data[1];
 			output(parent, format, code, file);
+		}
+	}
+
+	// O código é gerado aqui
+
+	public static void exportChart(Component parent, Chart<?> chart) {
+		Object[] data = getExportFormat(parent, true);
+		if (data != null) {
+			GraphicsFormat format = (GraphicsFormat) data[0];
+
+			String code = null;
+			switch (format) {
+			case TIKZ:
+				Point2D.Float size = (Point2D.Float) data[2];
+				code = TikZ.toTikz(chart, 100f * size.x, 100f * size.y);
+				break;
+			case SVG:
+				// TODO
+				break;
+			case MATLAB:
+				ArrayList<double[][]> points = new ArrayList<>();
+				ArrayList<String> legenda = new ArrayList<>();
+				for (Plotable p : chart.getList()) {
+					if (p instanceof CurveFamily) {
+						CurveFamily cf = (CurveFamily) p;
+						for (int i = 0; i < cf.size(); i++) {
+							cf.setIndex(i);
+							points.add(cf.getCoordinates());
+							legenda.add(cf.getDescription());
+						}
+					} else {
+						points.add(p.getCoordinates());
+						legenda.add(p.getDescription());
+					}
+				}
+				code = Matlab.generateMatlabCode(points, false, false, 1, "", chart.getxLabel(), chart.getyLabel(),
+						legenda.toArray(new String[legenda.size()]));
+				break;
+			case VML:
+				// TODO
+				break;
+			case EXCEL: // TODO
+//				File f = (File) data[1];
+//				if (f != null)
+//					Office.export(f, chart);
+				break;
+			}
+
+			if (code != null)
+				output(parent, format, code, (File) data[1]);
+			else {
+				File f = (File) data[1];
+				if (f != null)
+					FileChooser.openCreatedFile(f, "Planilha criada", false);
+			}
+
 		}
 	}
 
@@ -140,7 +200,8 @@ public class GraphicsExporter {
 
 	private static void output(Component parent, GraphicsFormat format, String code, File file) {
 		if (code != null) {
-			if (file != null) { // escrever arquivo
+			if (file != null) {
+				// escrever arquivo
 				IOutils.writeFile2(file, code);
 			} else {
 				if (format == GraphicsFormat.VML) {
