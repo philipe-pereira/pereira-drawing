@@ -1,5 +1,5 @@
 
-package br.com.pereiraeng.drawing.drawutils;
+package br.com.pereiraeng.drawing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

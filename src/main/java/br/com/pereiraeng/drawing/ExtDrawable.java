@@ -1,4 +1,4 @@
-package br.com.pereiraeng.drawing.drawutils;
+package br.com.pereiraeng.drawing;
 
 /**
  * Interface das classes que representam objetos que podem ser desenhados

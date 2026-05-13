@@ -1,4 +1,4 @@
-package br.com.pereiraeng.drawing.drawutils;
+package br.com.pereiraeng.drawing;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;

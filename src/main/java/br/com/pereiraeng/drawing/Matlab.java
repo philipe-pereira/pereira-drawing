@@ -1,4 +1,4 @@
-package br.com.pereiraeng.drawing.drawutils;
+package br.com.pereiraeng.drawing;
 
 import java.awt.Color;
 import java.util.List;
