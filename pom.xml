@@ -79,7 +79,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/philipe-pereira/pereira-graph</url>
+			<url>https://maven.pkg.github.com/philipe-pereira/pereira-drawing</url>
 		</repository>
 	</distributionManagement>
 </project>
